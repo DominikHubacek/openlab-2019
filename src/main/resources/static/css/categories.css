@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    background-size: cover !important;
+    background: url('../images/blue.jpg') no-repeat center fixed;
+}
+
+.btn {
+    margin: 20px;
+    padding: 15px;
+    font-size: x-large;
+}
+
+.card {
+    border: #ebab11 0.5mm solid !important;
+    position: absolute;
+    min-width: 350px;
+    width: 25%;
+    top: 15%;
+    left: 38%;
+}
+
+.card-header{
+    padding: 30px 0;
+}
+
+
+.list-group-item{
+    height: 5em;
+}
+
+.x{
+    font-size: 4em;
+    position: absolute;
+    right: 6%;
+    top: 6%;
+}

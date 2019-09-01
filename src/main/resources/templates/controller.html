@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz - Login</title>
+    <meta charset="UTF-8"/>
+    <meta name="id" th:content="${id}">
+    <link rel="shortcut icon" th:href="@{images/logo.png}">
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/index.css}">
+</head>
+<body>
+<div class="center"><h1>Quiz Studio</h1></div>
+<button id="start" class="button" onclick="play()">Vstúpiť</button>
+
+<div id="login" class="container" style="display: none;">
+    <h1>Vitajte</h1>
+
+    <div class="col-xl-8 offset-xl-2 col-md-12">
+        <div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" onkeyup="retransmit('email')" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Zadajte email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Heslo</label>
+                <input type="password" onkeyup="retransmit('password')" class="form-control" id="password" placeholder="Heslo" required>
+                <div class="text-right"><a href="#" onclick="registerUser();">Nemáš účet? Zaregistruj sa!</a></div>
+            </div>
+
+            <div class="flex">
+                <a href="#" class="button" style="text-decoration: none" onclick="send('playWithoutSignIn()')">Bez prihlásenia</a>
+                <button class="button" onclick="send('processForm(\'my-form\')')">Prihlásiť</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="register" class="container" style="display: none;">
+    <h1>Zaregistrovať sa</h1>
+
+    <div class="col-xl-8 offset-xl-2 col-md-12">
+        <div>
+            <div class="form-group">
+                <label for="nickname">Nickname</label>
+                <input type="text" onkeyup="retransmit('nickname')" class="form-control" id="nickname" placeholder="Zadajte nickname" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email2">Email</label>
+                <input type="email" onkeyup="retransmit('email2')" class="form-control" id="email2" aria-describedby="emailHelp" placeholder="Email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password2">Heslo</label>
+                <input type="password" onkeyup="retransmit('password2')" class="form-control" id="password2" placeholder="Heslo" required>
+            </div>
+
+            <button class="button" onclick="send('processForm(\'registration\')')">Pokračovať</button>
+        </div>
+    </div>
+
+</div>
+
+<script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+<script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+<script th:src="@{js/settings.js}"></script>
+<script th:src="@{js/controller.js}"></script>
+</body>
+</html>

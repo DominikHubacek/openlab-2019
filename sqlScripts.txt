@@ -1,0 +1,83 @@
+SQL na otazky, odpovede, a kategorie:
+
+SELECT q.content, a.answer, a.correct, q.category,
+CASE q.category
+WHEN 0 THEN 'Dejiny'
+WHEN 1 THEN 'Umenie'
+WHEN 2 THEN 'Veda'
+WHEN 3 THEN 'Literatura'
+WHEN 4 THEN 'Geografia'
+WHEN 5 THEN 'Hudba'
+WHEN 6 THEN 'Celebrity'
+WHEN 7 THEN 'Sport'
+WHEN 8 THEN 'Ostatne'
+WHEN 9 THEN 'Biologia'
+ELSE 'Error'
+END AS categoryText
+FROM question q, answer a, question_answers qa
+WHERE qa.question_id=q.id and qa.answers_answer_id=answer_id
+
+SQL na pocet otazok v jednotlivych kategoriach:
+
+SELECT category, COUNT(*) AS count,
+CASE category
+WHEN 0 THEN 'Dejiny'
+WHEN 1 THEN 'Umenie'
+WHEN 2 THEN 'Veda'
+WHEN 3 THEN 'Literatura'
+WHEN 4 THEN 'Geografia'
+WHEN 5 THEN 'Hudba'
+WHEN 6 THEN 'Celebrity'
+WHEN 7 THEN 'Sport'
+WHEN 8 THEN 'Ostatne'
+WHEN 9 THEN 'Biologia'
+ELSE 'Error'
+END AS categoryText
+FROM question
+GROUP BY category
+order by category
+
+krajsi:
+SELECT count(id),
+CASE category
+WHEN 0 THEN 'Dejiny'
+WHEN 1 THEN 'Umenie'
+WHEN 2 THEN 'Veda'
+WHEN 3 THEN 'Literatura'
+WHEN 4 THEN 'Geografia'
+WHEN 5 THEN 'Hudba'
+WHEN 6 THEN 'Celebrity'
+WHEN 7 THEN 'Sport'
+WHEN 8 THEN 'Ostatne'
+WHEN 9 THEN 'Biologia'
+when 10 then 'Jedlo'
+ELSE 'Error'
+END AS categoryText
+FROM question
+GROUP BY category
+order by count
+
+
+
+moje nerieste:
+Select distinct q.id FROM question q, question_answers qu WHERE qu.question_id=q.id order by q.id
+
+
+
+CREATE OR REPLACE PROCEDURE public.deletequestion(
+	questionid integer)
+LANGUAGE 'plpgsql'
+
+AS $BODY$
+declare
+    a_id integer;
+begin
+    select answers_answer_id from question_answers into a_id where question_id = questionId;
+	delete from question_answers where question_id = questionId;
+	FOR i IN 1..4 LOOP
+		delete from answer where answer_id = a_id;
+		a_id = a_id + 1;
+   	END LOOP;
+    delete from question where id = questionId;
+end;
+

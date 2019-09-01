@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz - Login</title>
+    <meta charset="UTF-8"/>
+    <!--Google sign-->
+    <meta name="google-signin-scope" content="profile email">
+    <meta name="google-signin-client_id" content="1081019531853-b1tvgg9n8nh34kgoogm9alnnpsgovbc2.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <!--End of Google sign-->
+    <meta name="id" th:content="${id}">
+    <link rel="shortcut icon" th:href="@{images/logo.ico}">
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/index.css}">
+</head>
+<body>
+    <div class="center"><h1>Quiz Studio</h1></div>
+    <button id="start" class="button" onclick="play()">Vstúpiť</button>
+
+    <div id="login" class="container" style="display: none;">
+        <h1>Vitajte</h1>
+
+        <div class="col-xl-8 offset-xl-2 col-md-12">
+            <form id="my-form" onsubmit="processForm('my-form'); return false;">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Zadajte email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Heslo</label>
+                    <input type="password" class="form-control" id="password" placeholder="Heslo" required>
+                    <div class="text-right"><a href="#" onclick="registerUser();">Nemáš účet? Zaregistruj sa!</a></div>
+                </div>
+
+                <div class="flex">
+                    <a href="#" class="button" style="text-decoration: none" onclick="playWithoutSignIn()">Bez prihlásenia</a>
+                    <button class="button" type="submit">Prihlásiť</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="g-signin2" data-width="200" data-height="50" data-onsuccess="onSignIn" data-theme="dark"></div>
+    </div>
+
+    <div id="register" class="container" style="display: none;">
+        <h1>Zaregistrovať sa</h1>
+
+        <div class="col-xl-8 offset-xl-2 col-md-12">
+            <form id="registration" onsubmit="processForm('registration'); return false;">
+                <div class="form-group">
+                    <label for="nickname">Nickname</label>
+                    <input type="text" class="form-control" id="nickname" placeholder="Zadajte nickname" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email2">Email</label>
+                    <input type="email" class="form-control" id="email2" aria-describedby="emailHelp" placeholder="Email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password2">Heslo</label>
+                    <input type="password" class="form-control" id="password2" placeholder="Heslo" required>
+                </div>
+
+                <button class="button" type="submit">Pokračovať</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div id="qrCode"></div>
+
+    <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+    <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+    <script th:src="@{js/sweetalert2.min.js}"></script>
+    <script th:src="@{js/settings.js}"></script>
+    <script th:src="@{js/qrcode.min.js}"></script>
+    <script th:src="@{js/index.js}"></script>
+</body>
+</html>

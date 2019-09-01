@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Quiz - Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{css/form.css}">
+    <link rel="shortcut icon" th:href="@{images/logo.ico}">
+</head>
+<body>
+<div class="x"><a href="end">x</a></div>
+    <div class="container-contact100">
+        <div class="wrap-contact100">
+            <form class="contact100-form validate-form" id="formQ">
+                <span class="contact100-form-title">
+                    Pridaj kvízovú otázku
+                </span>
+
+                <label class="label-input100" for="content">Otázka *</label>
+                <div class="wrap-input100 validate-input">
+                    <input id="content" class="input100" type="text" name="content"
+                           placeholder="Eg. Aká je najväčšia krajina na svete? " spellcheck="true">
+                    <span class="focus-input100"></span>
+                </div>
+
+                <label class="label-input100" for="categories">Kategória *</label>
+                <div class="wrap-input100 rs2 validate-input">
+                    <input id="category" class="input100 validate-input" type="text" list="categories"
+                           placeholder="Vyber kategóriu"
+                           name="datalist" required>
+                    <datalist id="categories"></datalist>
+                </div>
+
+                <label class="label-input100">Odpovede *</label>
+                <div class="wrap-input100 rs1 validate-input">
+                    <textarea id="answerA" class="input100" name="answerA" placeholder="Odpoveď A"
+                              spellcheck="true"></textarea>
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="wrap-input100 rs1 validate-input">
+                    <textarea id="answerB" class="input100" name="answerB" placeholder="Odpoveď B"
+                              spellcheck="true"></textarea>
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="wrap-input100 rs1 validate-input">
+                    <textarea id="answerC" class="input100" name="answerC" placeholder="Odpoveď C"
+                              spellcheck="true"></textarea>
+                    <span class="focus-input100"></span>
+                </div>
+                <div class="wrap-input100 rs1 validate-input">
+                    <textarea id="answerD" class="input100" name="answerD" placeholder="Odpoveď D"
+                              spellcheck="true"></textarea>
+                    <span class="focus-input100"></span>
+                </div>
+
+                <label class="label-input100">Správna odpoveď *</label>
+                <div class="wrap-input100 validate-input" id="checkbox">
+                    <label class="label-input100" for="correctA">
+                        <input id="correctA" name="correct" required type="radio"> Odpoveď A &emsp;&emsp;</label>
+                    <label class="label-input100" for="correctB">
+                        <input id="correctB" name="correct" type="radio"> Odpoveď B&emsp;&emsp;</label>
+                    <label class="label-input100" for="correctC">
+                        <input id="correctC" name="correct" type="radio"> Odpoveď C&emsp;&emsp;</label>
+                    <label class="label-input100" for="correctD">
+                        <input id="correctD" name="correct" type="radio"> Odpoveď D</label>
+                </div>
+
+                <div class="container-contact100-form-btn">
+                    <button class="contact100-form-btn" type="submit">
+    						<span>
+    							Submit
+    							<i class="zmdi zmdi-arrow-right m-l-8"></i>
+    						</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:src="@{js/settings.js}"></script>
+    <script th:src="@{js/jquery-3.4.1.min.js}"></script>
+    <script th:src="@{js/form.js}"></script>
+</body>
+</html>

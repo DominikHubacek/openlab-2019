@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz - Categories</title>
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{css/categories.css}">
+    <link rel="shortcut icon" th:href="@{images/logo.ico}">
+</head>
+<body>
+    <div class="x"><a href="end">x</a></div>
+    <div class="container">
+        <div class="card categories">
+            <div class="card-header">
+                <h3 class="text-center">Tvoje kategórie</h3>
+            </div>
+            <ul class="list-group list-group-flush" id="in"></ul>
+        </div>
+    </div>
+    <script th:src="@{js/settings.js}"></script>
+    <script th:src="@{js/category.js}"></script>
+</body>
+</html>

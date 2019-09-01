@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+    <link rel="shortcut icon" th:href="@{images/logo.ico}">
+    <link rel="stylesheet" th:href="@{css/question.css}">
+    <link rel="stylesheet" th:href="@{css/bootstrap.min.css}">
+</head>
+<body>
+<div class="container-fluid" >
+    <div class="container">
+
+        <div class="progress" id="myProgress">
+            <div id="myBar">
+            </div>
+        </div>
+
+        <div class="jumbotron">
+            <h2 class="text-center" th:id='question' th:name="${question.getId()}"
+                th:utext="${question.getContent()}"></h2>
+            <hr class="my-4">
+
+            <div class="row">
+                <div class="col btn btn-dark kjut" onclick="select(this.id)"
+                     th:id="${question.getAnswers().get(0).getAnswerId()}">
+                    <div class="percentage text-center hiden"></div>
+                    <p th:utext="${question.getAnswers().get(0).getAnswer()}"></p>
+                </div>
+                <div class="col btn btn-dark kjut" onclick='select(this.id)'
+                     th:id="${question.getAnswers().get(1).getAnswerId()}">
+                    <div class="percentage text-center hiden"></div>
+                    <p th:utext="${question.getAnswers().get(1).getAnswer()}"></p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col btn btn-dark kjut" onclick='select(this.id)'
+                     th:id="${question.getAnswers().get(2).getAnswerId()}">
+                    <div class="percentage text-center hiden"></div>
+                    <p th:utext="${question.getAnswers().get(2).getAnswer()}"></p>
+                </div>
+                <div class="col btn btn-dark kjut" onclick='select(this.id)'
+                     th:id="${question.getAnswers().get(3).getAnswerId()}">
+                    <div class="percentage text-center hiden"></div>
+                    <p th:utext="${question.getAnswers().get(3).getAnswer()}"></p>
+                </div>
+            </div>
+
+            <div class="clues text-center" th:if="${help == true}">
+                <img onclick="publikum()" alt="Odpovede publika" class="help" th:src="@{images/icon_answer.gif}">
+                <img onclick="fifty_fifty()" alt="50/50" class="help" th:src="@{images/50_icon.gif}">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{js/sweetalert2.min.js}"></script>
+<script th:src="@{js/settings.js}"></script>
+<script th:src="@{js/question.js}"></script>
+</body>
+</html>

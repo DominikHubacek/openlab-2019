@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="images/logo.ico">
+    <title>QuizStudio - Manual</title>
+    <link rel="stylesheet" href="css/tutorial.css">
+</head>
+<body>
+    <div class="center header">
+        <h1>Quiz Studio</h1>
+        <h2>Ciele</h2>
+        <ol>
+            <li>Inicializácia projektu a nastavenie konfiguračných súborov. <span class="point">krok 1</span></li>
+            <li>Implementácia entít a logiky hry. <span class="point">krok 2</span></li>
+            <li>Komunikácia medzi serverom a klientom, rest služby, mapovanie požiadaviek. <span class="point">krok 3</span></li>
+            <li>Vytvorenie používateľského rozhrania. <span class="point">krok 4</span></li>
+            <li>Interakcia s priestorom OpenLab. <span class="point">krok 5</span></li>
+            <li>Komunikácia medzi dvoma koncovými zariadeniami pomocou technológie WebSocket. <span class="point">krok 6</span></li>
+        </ol>
+        <h2>Úvod</h2>
+        <p>
+            Úlohou tohto návodu je získať základné vedomosti potrebné pre návrh a implementáciu vlastnej hry,
+            vytoriť server a pouzívateľské rozhranie, pracovať s databázou, následné nasadenie riešenia na
+            školský server s verejnou IP adresou a integrácia hry do prostredia OpenLab.
+        </p>
+    </div>
+    <div class="center">
+        <h2>Postup</h2>
+        <div class="section">
+            <h3>Krok 1<span class="point up">ciel 1</span></h3>
+            <p>Pri práci na tomto prejekte budete využívať
+                vývojové prostredie IntelliJ IDEA a nasledujúce technológie a nástroje:</p>
+            <ul>
+                <li>Java</li>
+                <li>Maven</li>
+                <li>Spring</li>
+                <li>Thymeleaf</li>
+                <li>Hibernate</li>
+                <li>PostgreSQL</li>
+                <li>WebSocket</li>
+                <li>JavaScript, HTML, CSS</li>
+            </ul>
+            <div class="task">
+                <h4>Úloha 1.1</h4>
+                <p>Inicializujte projekt, pripojte potrebne kniznice.</p>
+            </div>
+            <p>
+                Vo vývojovom prostredí IntelliJ IDEA
+                vytvorte nový maven projekt. File → New → Project</p>
+            <img alt="maven" src="images/maven.png">
+            <p>Stlačte tlačidlo Next a zadajte artifactId, groupId a verziu projektu.
+            </p>
+            <img alt="inicialization-1.png" src="images/inicialization-1.png">
+            <p>Zvoľte meno a umiestnenie projektu.</p>
+            <img alt="inicialization-2.png" src="images/inicialization-2.png">
+            <p>Stiahnite si tento súbor <a href="files/pom.xml" download>pom.xml</a>. Podľa neho nakonfigurujte vlastný
+                <span class="red">pom.xml</span> súbor. V meta tag <span class="red">mainClass</span> zadajte cestu k triede, v ktorej sa nachádza <span class="red">main</span> funkcia. V našom prípade
+            <span class="red">quiz.QuizServer</span></p>
+            <img alt="server-setting.png" src="images/server-setting.png">
+            <p>Túto časť nakonfigurujte podľa vášho servera. Zadajte url servera a prihlasovacie údaje. V tage <span class="red">dependencies</span> máme pripojene knižnice, potrebne pre pracú na projekte.
+                Ak budete potrebovať ďalšie knižnice, tak ich pridajte do tagu <span class="red">dependencies</span>.</p>
+            <div class="task">
+                <h4>Úloha 1.2</h4>
+                <p>Nakonfigurujte konfiguračné súbory.</p>
+            </div>
+            <img src="images/tree.png" alt="tree" style="width: 200px"/>
+            <p>Náš projekt má pevnú štruktúru. Logika hry, čiže serverová časť sa nachádza v priečinku <span class="red">java</span>, a klientska časť, v priečinku <span class="red">resources</span>,
+                taktiež sa tam nachádzajú konfiguračné súbory <a href="files/application.properties">application.properties</a>, <a href="files/application-dev.properties">application-dev.properties</a>,
+                <a href="files/application-prod.properties">application-prod.properties</a>. Dajte si ale pozor na tuto štruktúru.
+                Snažte sa zachovať umiestnenie a pomenovanie súborov najme v priečinku resources, je to potrebne pre korektne fungovanie thymeleafu.
+            </p>
+            <p>V našom prípade využívame služby dátového servera PostgreSQL. Ak ste ho doposiaľ nepoužívali, nainštalujte si databázový systém. Na jeho stiahnutie môžete využiť oficiálnu stránku
+            <a href="http://www.postgresql.org/download" target="_blank">http://www.postgresql.org/download/</a>
+            alebo si ho nainštalujte prostredníctvom správcu softvérových balíkov vášho operačného
+            systému. Použite najnovšiu verziu databázového servera dostupnú pre váš systém.
+
+            </p>
+            <p>Súbor <span class="red">application-dev.properties</span> bude obsahovať konfiguráciu na pripojenie k databáze, ktorú používate lokálne na vašom počítači. Nezabudnite preto upraviť najmä hodnotu pre meno a heslo.</p>
+            <p>Súbor <span class="red">application-prod.properties</span> bude obsahovať konfiguráciu na pripojenie k databáze na produkčnom serveri, kde bude vaša hra nasadená. </p>
+            <p>V priečinok qiuz pridajte triedy <a href="files/QuizServer.java" download>QuizServer</a>, <a href="files/RestServiceConfig.java" download>RestServiceConfig</a> a
+                <a href="files/SpringBootTomcatApplication.java" download>SpringBootTomcatApplication</a>. Sú potrebne pre konfiguráciu projektu a jeho spustenie.
+            </p>
+            <div class="task">
+                <h4>Úloha 1.3</h4>
+                <p>Do konfigurácie pre lokálne spustenie projektu, ktorú používame vo vývojovom prostredí IntelliJ IDEA, nastavíme aktívny profil na dev.</p>
+            </div>
+            <br>
+            <img alt="run-dev.png" src="images/run-dev.png">
+            <br>
+            <div class="task">
+                <h4>Úloha 1.4</h4>
+                <p>Do projektu pridáme konfiguráciu pre Maven na nasadenie aplikácie na produkčný server.</p>
+            </div>
+            <br>
+            <img alt="run-prod.png" src="images/run-prod.png">
+        </div>
+
+        <div class="section">
+            <h3>Krok 2<span class="point up">ciel 2</span></h3>
+
+            <div class="task">
+                <h4>Úloha 2.1</h4>
+                <p>Vytvorenie entit.</p>
+            </div>
+            <p>Na vytvorenie tabuliek v databáze a prácu s nimi sme
+                do projektu prilinkovali Java framework JPA (java persistence api), vďaka ktorému vieme jednoduchšie
+                pracovať na strane back-endu s databázou.</p>
+            <p>
+                Ak Vás zaujíma ako JPA funguje môžete si viac prečítať napríklad na <a href="https://www.learn2code.sk/blog/java-persistence-jpa-hibernate-orm">tejto stránke</a>
+                alebo <a href="https://kurzy.kpi.fei.tuke.sk/kp/labs/07.html"> na stránkach predmetu Komponentové programovanie.</a>
+            </p>
+            <p>
+                Nasleduje popis entít, ktoré sa mapujú do databázy. Všetky tieto nájdete v priečinku <a href="files/entity.zip">entity</a>.
+                Náš návod popisuje len sémantický význam jednotlivých atribútov entít takže v prípade, že Vám fungovanie databázy
+                nie je zrejmé je potrebné si to naštudovať. Základné pojmy, ktoré je potrebné poznať sú primárny a cudzí kľúč
+                a ich prepojenie a význam v databáze.
+            </p>
+            <div class="entity"><b>Player:</b>
+                <div class="left-tab">Entita Player predstavuje u nás samotného hráča a slúži nám na získanie informácii o danom hráčovi ako
+                    napríklad jeho meno či email. Taktiež si ukladáme o hráčovi skóre, ktoré potom využívame ako
+                    Hall of Fame.
+                </div>
+                <p>Properties:</p>
+                <ul>
+                    <li>PlayerId – jedinečný identifikátor - primary key.</li>
+                    <li>Name – meno hráca.</li>
+                    <li>Score – celkové dosiahnuté skóre daného hráča.</li>
+                    <li>Email – unikátny email hráča, nesmie sa opakovat!</li>
+                    <li>Password – heslo daného hráča.</li>
+                </ul>
+            </div>
+
+            <div class="entity"><b>Question:</b>
+                <div class="left-tab">Entita Question slúži na uchovavanie otazky v hre. Z danej
+                    entity vieme vyčítať obsah otázky a taktiež z akej kategórie pochádza,či správnu odpoveď vďaka
+                    odkazu (foreign key) na entitu answer.
+                </div>
+                <p>Properties:</p>
+                <ul>
+                    <li>Id – jedinecny identifikátor - primary key.</li>
+                    <li>Content – obsah otázky.</li>
+                    <li>Category – z akej kategorie je dana otázka.</li>
+                    <li>Answers – list odpovedí na otázku pričom jedna z nich je správna.</li>
+                </ul></div>
+
+            <div class="entity"><b>Answer:</b>
+                <div class="left-tab">Entita Answer slúži na uchovávanie odpovedí k otázkam.</div>
+                <p>Properties:</p>
+                <ul>
+                    <li>Id – jedinečný identifikátor - primary key.</li>
+                    <li>Content – obsah odpovede.</li>
+                    <li>Visibility – nakoľko hocikto môže pridávať otázky do quizu tak tento atribút určuje to ,či daná otázka prešla validáciou.</li>
+                    <li>Correct – ci je odpoveď správna resp. nesprávna.</li>
+                    <li>Count – slúži na uloženie počtu kliknutí na danú odpoveď za účelom vytvorenia nápovedy ‘Publikum’.</li>
+                </ul></div>
+
+            <div class="entity"><b>Answered:</b>
+                <div class="left-tab">Entita Answered slúži na uchovávanie hráčových otázok, ktoré
+                    počas hry už dostal a na základe toho vieme generovať takú otázku, ktorú buď vôbec
+                    nedostal alebo ju mal najmenej.
+                </div>
+                <p>Properties:</p>
+                <ul>
+                    <li>Id – jedinečný identifikátor - primary key.</li>
+                    <li>Date – dátum odpovede na otazku.</li>
+                    <li>Player – cudzí kľúč odkazujúci na hráča.</li>
+                    <li>Question – cudzí kľúč odkazujúci na otazku.</li>
+                </ul></div>
+
+            <b>Opis JPA anotacii a atribúty:</b>
+            <ul>
+
+                <li>Anotácia @Entity je anotácia označujúca objekt za entitu.</li>
+                <li>Anotácia @NamedQuery je anotácia na vytvorenie pomenovaného dopytu.
+                    <ul>
+                        <li>name - názov dopytu</li>
+                        <li>query - samotný dopyt</li>
+                    </ul>
+                </li>
+
+                <li>Anotácia @Id je anotácia definujúca primárny kluč.</li>
+                <li>@GeneratedValue - Slúži na generovanie nahodných hodnot. V našom pripade slúži na generovanie
+                    nahodneho identifikatora(id).
+                    Zvykne sa využívat v kombinácii s anotáciou id.
+                </li>
+
+                <li>@Column - Reprezentuje stĺpec v danej entite. Nieje nutné tuto anotáciu uvádzať.
+                    <ul>
+                        <li>unique - Ci dana hodnota musi byt v danej tabulke unikátna. Nadobúda hodnoty true alebo
+                            false (default)
+                        </li>
+                        <li>nullable - Ci dany stĺpec v tabulke móže nadobudnúť hodnotu null. Nadobúda hodnoty true
+                            (default) alebo false
+                        </li>
+                        <li>length - Dĺžka stĺpca. (Platí len vtedy, ak sa používa stĺpec s hodnotami reťazca.)</li>
+                        <li>name - Služi na premenovanie stĺpca v tabulke</li>
+                    </ul>
+                </li>
+                <li><a href="https://www.baeldung.com/jpa-one-to-one">@OneToOne</a> - je vzťah typu jeden k jednému</li>
+                <li><a href="https://www.baeldung.com/hibernate-one-to-many">@OneToMany</a> - je vzťah typu jeden k
+                    mnohým
+                </li>
+                <li><a href="https://www.baeldung.com/jpa-many-to-many">@ManyToMany</a> - je vzťah typu mnohý k mnohým
+                </li>
+
+            </ul>
+
+            <p>
+                Triedy <a href="files/Category.java">Category</a> a <a href="files/Game.java">Game</a> do databázy
+                nemapujeme. Tieto triedy sú pomocne a potrebne pre fungovanie hry, takže ich dajte do priečinka <span class="red">core</span>.
+            </p>
+
+            <div class="task">
+                <h4>Úloha 2.2</h4>
+                <p>Implementácia služieb pre prácu s databázou</p>
+            </div>
+
+            <p>
+                V projekte sme si v balíku <span class="red">service</span> vytvorili služby vďaka ktorým vieme ukladať, modifikovať či mazať
+                jednotlivé riadky v tabuľkách.
+            </p>
+
+            <div class="entity">
+                <b>PlayerServiceJPA:</b>
+                <div class="left-tab">Pracuje s tabuľkou Player a obsahuje tieto metódy</div>
+                <br>
+
+                <p>void register(Player player)</p>
+                <ul>
+                    <li>slúži na zaregistrovanie hráča</li>
+                </ul>
+
+                <p>void setPlayerScore(int id, int score)</p>
+                <ul>
+                    <li>slúži na modifikáciu hráčovho skóre</li>
+                </ul>
+
+                <p>List< Player> getAllPlayers()</p>
+                <ul>
+                    <li>slúži na získanie informácii o všetkých hráčov z databázy </li>
+                </ul>
+
+                <p>Player getPlayerFromMail(String mail)</p>
+                <ul>
+                    <li>slúži na získanie údajov o hráčovi vďaka emailu</li>
+                </ul>
+
+                <p>Player getPlayerFromID(int id)</p>
+                <ul>
+                    <li>slúži na získanie údajov o hráčovi vďaka jeho ID</li>
+                </ul>
+
+                <p>Player login(String email, String password)</p>
+                <ul>
+                    <li>služba daného hráča prihlási ak sa heslo a email zhoduje s nejakým stĺpcom v tabuľke</li>
+                </ul>
+            </div>
+
+
+            <div class="entity">
+                <b>QuestionServiceJPA:</b>
+                <div class="left-tab">Pracuje s tabuľkou Question, Answered a Answer a obsahuje tieto metódy</div>
+                <br>
+
+                <p>void saveQuestion(Question question)</p>
+                <ul>
+                    <li>slúži na uloženie question do tabuľky</li>
+                </ul>
+
+
+                <p>Question getQuestion(int id)</p>
+                <ul>
+                    <li>slúži na získanie question na základe ID</li>
+                </ul>
+
+
+                <p>Question getQuestion(Category category, int player_id)</p>
+                <ul>
+                    <li>vďaka id playera a category vieme hráčovi poskytnút takú otázku z danej kategórie, ktorú ešte nemal
+                        resp. mal najmenejkrát
+                    </li>
+                </ul>
+
+                <p>List< Category> getCategories(int count)</p>
+                <ul>
+                    <li>list aktuálnych kategórii uložených v tabuľke Question v stĺpci category. Slúži na to aby hráč
+                        nevybral takú kategóriu v ktorej v databáze nemáme žiadnu otázku.
+                    </li>
+                </ul>
+
+                <p>void incrementAnswerCount(int id)</p>
+                <ul>
+                    <li>Slúži len na inkrementovanie počtu stlačení jednotlivej odpovede.</li>
+                </ul>
+
+                <p>boolean correctAnswer(int id)</p>
+                <ul>
+                    <li>vráti true ak daná odpoveď získana vďaka id je správna v opačnom prípade vracia false</li>
+                </ul>
+
+                <p>int count(int id)</p>
+                <ul>
+                    <li>slúži na získanie počtu stlacených odpovedí nad jednou answer</li>
+                </ul>
+            </div>
+
+            <b>Opis anotacii a objektov:</b>
+            <ul>
+                <li>Anotácia @Transactional je Spring anotácia definujúca novú transakčnú službu.</li>
+                <li>PersistenceContext - predstavuje niečo ako "cache". Má svoje vlastné, nezdieľané pripojenie na
+                    databázu (viac o JPA konceptoch).
+                </li>
+                <li>EntityManager entityManager - je injektovaná inštancia správcu entít, reprezentuje
+                    PersistenceContext; do tejto premennej bude automaticky vložená jeho inštancia.
+                </li>
+            </ul>
+
+            <b>Opis jednotlivých metód nad objektom entityManager:</b>
+            <ul>
+                <li>persist() - Uloži objekt do databázy</li>
+                <li>remove() - odstrani objekt z databázy</li>
+                <li>merge - Ak najde v databáze rovnaky objekt tak ho prepíše v opačnom prípade spraví metódu persist()
+                </li>
+                <li>createQuery(String query) - Na základe tejto metódy vieme vyhladavať, filtrovať či pripadne
+                    modifikovať
+                    jednotlivé záznamy v tabuľkach. Prijíma jeden parameter, samotný príkaz sql dopytu, ktory mu vložíme
+                    pomocou objektu
+                    String.
+                </li>
+                <li>createNamedQuery(string namedQuery) - Analogicky to iste ako createQuery. Rozdiel je iba v tom, že
+                    si
+                    select zadefinujeme v entitách (pozri kod) a na základe jeho mena ho vložíme do parametra metódy.
+                </li>
+                <li>setParameter(string nameParameter, Object value ) - služi na nastavovanie parametrov v dopytoch</li>
+                <li>getSingleResult() - vracia práve jeden vysledok dopytu</li>
+                <li>getResultList() - vracia list vysledkov dopytu</li>
+            </ul>
+
+            <p>Triedy, rozhrania a výnimky si môžete stiahnuť tu <a href="files/service.zip" download>service</a>. Dajte si ale pozor na názvy package-ov a importov.</p>
+
+
+            <div class="task">
+                <h4>Úloha 2.3</h4>
+                <p>Vytvorenie databázy</p>
+            </div>
+            <p>Naša databáza bude obsahovať 4 entity. Nižšie môžete vidieť relačný diagram,
+                ktorý popisuje entity <span class="red">Answered, Question, Player, Answer</span></p>
+            <img alt="erdplus-diagram.png" src="images/erdplus-diagram.png">
+            <br>
+
+            <p>Na začiatok je potrebné vytvoriť databázu s názvom quizstudio. Ak používate PostgreSQL spustíte program pgAdmin
+                a v rámci vášho pripojenia, ktoré sa nachádza v ľavom menu si vytvoríte novú databázu.
+                Môžete si pri tom pomôcť <a href="https://www.postgresql.org/docs/">dokumentáciou pre PostgreSQL</a>
+            </p>
+
+            <p><a href="https://kurzy.kpi.fei.tuke.sk/kp/labs/05.html">Postup na vytvorenie databázy</a></p>
+
+            <div class="task">
+                <h4>Úloha 2.4</h4>
+                <p>logika hry</p>
+            </div>
+            <p>
+                Hneď na úvodnej stránke je hráč požiadaný aby sa buď zaregistroval alebo prihlásil alebo pokracoval bez registrácie
+                a prihlásenia. <br>
+                V tomto prípade ale hráč stráca nárok na aktualizovanie jeho hráčského skóre. Následne sa používateľovi zobrazí
+                modal s troma kategóriami a potom, čo hráč zvolí jednu z kategorii
+                vygenerujú sa mu 3 otazky. Tento postup sa opakuje dokopy trikrát. <br>
+                Počas hry ma hráč možnosť využiť dva druhy nápoved pričom počas jedného kola
+                môže využiť len jednu. Nápovedy sú typu publikum, kedy sa hráčovi zobrazí v  percentách nad každou odpoveďou
+                koľkokrát bola zvolená práve táto odpoveď. <br>
+                Ďalšia nápoveda je 50/50. Ako z názvu vyplýva, odstránia sa 2 nesprávne odpovede a ostane jedna
+                správna a jedna nesprávna. <br> Po tom ako hráč dohrá tri kolá nasleduje konecné vyhodnotenie hry
+                s možnosťou zahrať si znova. Hráč taktiež môže podporiť quiz pridaním otázky do databazy.
+
+            </p>
+
+        </div>
+
+        <div class="section">
+            <h3>Krok 3<span class="point up">ciel 3</span></h3>
+            <div class="task">
+                <h4>Úloha 3.1</h4>
+                <p>MVC-model</p>
+            </div>
+
+            <p>
+                <a href="https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">Model – View –
+                    Controller</a> (MVC) je architektonický vzor, ​​ktorý sa bežne používa na vývoj používateľských
+                rozhraní, ktoré rozdeľujú aplikáciu do troch vzájomne prepojených častí. Toto sa robí na oddelenie
+                interných reprezentácií informácií od spôsobu, akým sa informácie prezentujú a prijímajú od používateľa.
+                Návrhový vzor MVC oddelí tieto hlavné komponenty, čo umožňuje opätovné použitie kódu a paralelný vývoj.
+            </p>
+            <div class="task">
+                <h4>Úloha 3.2</h4>
+                <p>Controller</p>
+            </div>
+
+            <b>Opis anotácii a objektu Model:</b>
+            <ul>
+                <li>@Controller - Oznamuje Springu, že táto trieda je typu kontrolér</li>
+                <li>@Scope(WebApplicationContext.SCOPE_SESSION) - Umožni novým klientom ziskat novú session</li>
+                <li>
+                    <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/bind/annotation/RequestMapping.html">@RequestMapping</a>
+                    - Anotácia pre mapovanie webových požiadaviek na metódy v triedach spracovania požiadaviek s
+                    flexibilnými podpismi metód.
+                </li>
+                <li>@RequestParam - Slúži na sparovanie hodnot z url s parametrami metódy
+                </li>
+                <li>Model model - Objekt na vloženie udajov do šablóny
+                </li>
+            </ul>
+
+            <p>Stiahnite si <a href="files/QuizController.java" download>Controller</a></p>
+            <div class="task">
+                <h4>Úloha 3.2</h4>
+                <p>Opis jednotlivych RequestMapping</p>
+            </div>
+
+            <ul>
+
+                <li>getquestion - na ziskanie otazky</li>
+                <li>end - ukončujúca podstranka</li>
+
+                <li>categories - slúži na získanie kategórii</li>
+
+                <li>form - formulár na vlozenie otázok do databázy</li>
+                <li>login - slúži na prihlasenie uživatela</li>
+                <li>correct - slúži na ziskanie spravnej odpovedi</li>
+                <li>answer - vrati nam počet kliknuty na jednotlivu odpoved. Slúži na vytvorenie pomocky publikum</li>
+                <li>fifty-fifty - nápoveda pol na pol nam odstrani z otázky dva nesprávne odpovede</li>
+            </ul>
+
+            <p>Stiahnuť triedy na mapovanie požiadaviek môžete <a href="files/webservice.zip" download>tu</a></p>
+
+        </div>
+
+        <div class="section">
+            <h3>Krok 4<span class="point up">ciel 4</span></h3>
+            <br>
+            <img alt="screen2.jpg" src="images/screen2.jpg"/>
+            <br>
+            <p>
+                Pri zobrazení jednotlivých častí nášho kvízu sme použili Bootstrap. Ak sa preň rozhodnete aj vy, máte
+                dve možnosti. Môžete si jednotlivé súbory stiahnuť a nalinkovať do projektu ako ostatné css a js
+                súbory alebo použiť CDN verziu. Príklad nájdete priamo stránke Bootstrapu.
+            </p>
+            <br>
+            <img alt="screen3.jpg" src="images/screen3.jpg"/>
+            <br>
+            <p>
+                Použili sme základné Bootstrap triedy container a container-fluid, ktoré slúžia na obalenie obsahu
+                stránky. Ďalej sme využili Bootstrap grid a teda viariácie triedy col, ktoré slúžia na rozdelenie
+                a zarovnanie obsahu. Pri zobrazení kategórii sme použili triedu card.
+            </p>
+            <img alt="screen4.jpg" src="images/screen4.jpg"/>
+            <p>
+                Pri konkrétnej otázke sme triedu jumbotron a pre naštýlovanie jednotlivých odpovedí triedu button.
+                Máme aj časovač, šírka ktorého sa mení v čaše.
+            </p>
+            <img alt="screen5.jpg" src="images/screen5.jpg"/>
+            <p>
+                Pri otázke zobrazujeme pri stlačení nápovedy odpovede publika percentuálny podiel voľby tejto
+                odpovede. Táto nápoveda sa zobrazí v div elemente, ktorému sa po stlačení zmení hodnota atribútu
+                display z none na block. Tento div má nastavenú pozíciu absolute vzhľadom na rodičovský element.
+            </p>
+            <img alt="screen6.jpg" src="images/screen6.jpg"/>
+            <p>Ak chcete naštilovať vašu hru ako my, môžete použiť <a href="files/images.zip" download>obrázky</a> a
+                <a href="files/fonts.zip" download>fonty</a> z nášho projektu dokonca <a href="files/css.zip" download>css</a>,
+                <a href="files/js.zip" download>js</a> a <a href="files/templates.zip" dovnload>html</a> súbory. Nezabudnite ale zachovať štruktúru pre fungovanie thymeleafu.
+            </p>
+        </div>
+
+        <div class="section">
+            <h3>Krok 5<span class="point up">ciel 5</span></h3>
+            <div class="task">
+                <h4>Úloha 5.1</h4>
+                <p>Interakcia s priestorom OpenLab.</p>
+            </div>
+            <br>
+            <img alt="openlab.jpg" src="images/openlab.jpg"/>
+
+            <p>Pri vytváraní projektu sme prihliadali na možnosti, ktoré nám priestor Openlab ponúka.
+                Chceli sme docieliť jednoduchosť používania našej applikácie v priestoroch Openlab a zároveň
+                ponechať funkcionalitu bežnej webovej aplikácie. Okrem interakcie pomocou dotykovej obrazovky sme
+                využili aj RGB svetlá,
+                ktoré boli ponúknuté ako služba samotným Openlabom - v prípade správnej odpovede sa miestnosť rozsvieti
+                na zeleno,
+                v prípade nesprávnej odpovede, alebo vypršania časového limitu na červeno.
+            </p>
+            <p>
+                Vo vašom riešení môžete použiť ďalšie možnosti ktoré ponuka OpenLab, napríklad ovládanie hlasom.
+                Viac informácii môžete nájsť na tejto stránke <a href="https://kpi.fei.tuke.sk/sk/openlab">OpenLab</a>.
+            </p>
+
+            <div class="task">
+                <h4>Úloha 5.2</h4>
+                <p>Využitie dotykových obrazoviek.</p>
+            </div>
+            <p>V priestore Openlab sme pracovali najmä na dotykových obrazovkách.
+                Vďaka jednoduchosti našej webovej applikácie a primeranej veľkosti jednotlivých častí UI,
+                bolo možné použiť rovnakú verziu. Pre ostatné zobrazovacie zariadenia,
+                ktoré nemajú pripojené žiadné vstupné zariadenia, sme využili QR kód,
+                pomocou ktorého je možné prepojiť mobilný telefón s obrazovkou a následne ho používať ako vstupné
+                zariadenie.</p>
+
+            <div class="task">
+                <h4>Úloha 5.3</h4>
+                <p>Využitie svetiel.</p>
+            </div>
+
+            <p>Využili sme ponúknutú REST službu light. Ponúknutá služba musela byť
+            implementovaná na strane servera, pretože JS hádže v browseri CROS Policy error.
+            Link na dokumentáciu: <a href="https://git.kpi.fei.tuke.sk/open-lab/info/wikis/Lights">dokumentáciu</a>.
+                Stiahnite si triedu <a href="files/Lights.java" download>Lights</a> na ovládanie svetlom a umiestnite ju v priečinku <span class="red">core</span>
+            </p>
+            <br>
+            <img alt="lights-schema.png" src="images/lights-schema.png">
+        </div>
+
+        <div class="section">
+            <h3>Krok 6<span class="point up">ciel 6</span></h3>
+            <div class="task">
+                <h4>Úloha 6.1</h4>
+                <p>Configuracia WebSocketu.</p>
+            </div>
+            <p>Aby dvaja klienti vedeli medzi sebou komunikovať, sme použili WebSocket. Táto technológia
+                nám oproti štandardným rest službám zabezpečí pevné spojenie dvoch koncov. Čiže nebudeme
+                zaťažovať server a každú pol sekundu si pýtať dáta, ale podpíšeme sa na linku, a budeme čakať
+                kým nam server niečo pošle, resp. my niečo pošleme na server a on to prepošle ďalej.
+            </p>
+            <br>
+            <img alt="webSock-gif.gif" src="images/webSock-gif.gif"/>
+            <br>
+            <p>Trieda <a href="files/WebSocketConfig.java" download="">WebSocketConfig</a> nakonfiguruje socket. Tu sa nastaví aj adresa,
+                na ktorú sa ma pripojiť klient. <a href="files/WebsocketController.java" download>WebsocketController</a> má funkciu, ktorá presmeruje,
+                všetky prijaté správy, pričom správy sa presmeruju podľa id, ktoré server pridelí klientovi počas vytvorenia
+                spojenia.
+            </p>
+            <p>Ak používateľ načíta QR kód, bude presmerovaný na stránku kontrolera, ktorý sa pripojí na linku a bude posielať
+                dáta na server, ktorý ich prepošle na 'zariadenie'.</p>
+            <p>Trieda <a href="files/Message.java" download>Message</a> sa používa ako dátová jednotka ktorá putuje socketom.
+                Má v sebe 3 položky: <span class="red">text</span> - vyjadruje spravu, <span class="red">data</span> - sú údaje,
+                ktoré chceme posielať, a <span class="red">func</span> - názov funkcie spolu s jej argumentami, ktorú chceme zavolať. Ak na
+                stránku príde nejaká správa, JavaScript sa pokúsi vykonať funkciu, názov ktorej sa nachadza v položke <span class="red">func</span>
+                pomocou funkcie eval(). Takým spôsobom vieme ovládať stránku pomocou kontrolera.
+            </p>
+
+            <div class="task">
+                <h4>Úloha 6.2</h4>
+                <p>V nasej hre sme implementovali WebSocket len pre úvodnú stránku. Ako doplnkové zadanie vám ponúkame implementovať WebSocket pre celu hru.</p>
+            </div>
+        </div>
+
+
+        <div class="section">
+            <h3>TL;DR<span class="point up">:)</span></h3>
+            <div class="task">
+                <h4>Krok 1</h4>
+                <p>Stiahni a nainštaluj Ideu</p>
+            </div>
+            <p>
+                Stiahni tu: <a href="https://www.jetbrains.com/idea/">Idea</a>
+            </p>
+
+
+            <div class="task">
+                <h4>Krok 2</h4>
+                <p>Stiahni a nainštaluj PostgreSQL</p>
+            </div>
+            <p>
+                Stiahni tu: <a href="https://www.postgresql.org/">PostgreSQL</a>
+            </p>
+
+            <div class="task">
+                <h4>Krok 3</h4>
+                <p>Vytvor Databázu cez postgres</p>
+            </div>
+
+            <p>
+                Zapni postgres, vytvor prázdnu databázu a ulož si jej názov a heslo.
+            </p>
+
+            <div class="task">
+                <h4>Krok 4</h4>
+                <p>Stiahni si náš program</p>
+            </div>
+
+            <p>
+                Stiahni tu: <a href="tutoceleeeeeeeeeeeeeeeeee.zip">QuizStudio</a>
+            </p>
+
+            <div class="task">
+                <h4>Krok 5</h4>
+                <p>Pridaj meno a heslo DB</p>
+            </div>
+
+            <p>
+                V súbore src.main.resources.application-dev.poperties, zmen url, meno a heslo svojej databázy z kroku č.
+                3.
+            </p>
+
+            <div class="task">
+                <h4>Gratulujem, spusti program :) </h4>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <img alt="logo-kpi.png" class="logo" src="images/logo-kpi.png">
+        <p>Made by:</p>
+        <table>
+            <tr>
+                <td class="name">Viktor Maksym</td>
+                <td class="name">Denis Lukco</td>
+                <td class="name">Mirka Filcakova</td>
+                <td class="name">Dominik Hubacek</td>
+            </tr>
+        </table>
+    </footer>
+</body>
+</html>

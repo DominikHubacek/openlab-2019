@@ -1,0 +1,99 @@
+@font-face {
+    font-family: 'Galada';
+    src: url("../fonts/Galada-Regular.ttf");
+}
+
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: url('../images/intro.jpg') no-repeat center fixed;
+    background-size: cover;
+}
+
+#qrCode {
+    position: absolute;
+    right: 2vw;
+    bottom: 2vw;
+}
+
+.center {
+    font-family: Galada;
+    font-style: italic;
+    text-align: center;
+    margin-top: 5%;
+}
+
+.center h1 {
+    font-size: 9vw;
+}
+
+#login {
+    margin-top: 2%;
+    max-width: 60%;
+}
+
+#register {
+    margin-top: 2%;
+    max-width: 60%;
+}
+
+h1 {
+    text-align: center;
+    font-size: 40px;
+}
+
+.g-signin2 {
+    margin-left: calc((100% - 200px) / 2);
+}
+
+.button {
+    user-select: none !important;
+    outline: none;
+    background-color: transparent;
+    color: black;
+    font-size: 16px;
+    padding: 12px 25px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: solid black 2px;
+    text-align: center;
+    display: block;
+    margin: auto;
+}
+
+.button:hover {
+    background-color: black;
+    color: white;
+}
+
+#start {
+    margin-top: 10%;
+    border-radius: .5vw;
+    font-size: 2vw;
+}
+
+.flex {
+    margin: 5vh 0;
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.flex div {
+    width: 50%;
+}
+
+#q-mark {
+    color: #202428;
+    text-decoration: none;
+    line-height: 50px;
+    text-align: center;
+    font-size: 40px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border: solid #202428 2px;
+    position: absolute;
+    right: 2vw;
+    top: 2vw;
+}

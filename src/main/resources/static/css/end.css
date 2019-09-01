@@ -1,0 +1,21 @@
+body{
+    background-image: url("../images/intro.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.alert{
+    margin-top: 5%;
+}
+
+.btn{
+    margin-top:10%;
+}
+
+.x{
+    font-size: 6em;
+    position: absolute;
+    right: 6%;
+    top: 6%;
+    text-decoration: none;
+}

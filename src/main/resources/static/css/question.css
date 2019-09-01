@@ -1,0 +1,76 @@
+@font-face {
+    font-family: 'Galada';
+    src: url("../fonts/Galada-Regular.ttf");
+}
+
+body {
+    background-size: cover !important;
+    background: url('../images/Untitled design.png') no-repeat center fixed;
+    min-height: 100%;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    margin: 0;
+}
+
+
+.jumbotron{
+    min-width: 400px;
+    margin: 10vh auto;
+    width: 50%;
+}
+
+.btn{
+    font-size: larger;
+    margin: 20px;
+    padding: 20px 10px;
+}
+
+.btn p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.card{
+    width: 40%;
+    margin: 20% auto;
+}
+
+.list-group-item{
+    height: 5em;
+}
+
+.progress{
+    margin-top: 5vh;
+}
+
+.help {
+    width: 10%;
+    margin: 3%;
+}
+
+.clues{
+    margin-top: 5%;
+    text-align: center;
+}
+
+#myBar {
+    background: dodgerblue;
+}
+
+.percentage{
+    width: 55px;
+    height: 55px;
+    display: inline-block;
+    position: absolute;
+    right: 2%;
+    top: -32%;
+    background-color: azure;
+    border-radius: 50%;
+    border: 1px black solid;
+    color: black;
+    padding-top: 3%;
+    
+}
+
+.hiden {
+    display: none;
+}
